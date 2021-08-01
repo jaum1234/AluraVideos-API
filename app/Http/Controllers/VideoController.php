@@ -14,76 +14,64 @@ Class VideoController extends Controller
 {
     protected string $classe;
 
-    public function index(BuscadorQuery $buscadorQuery,Request $request)
+    public function index(VideoService $videoService ,Request $request, BuscadorQuery $buscadorQuery)
     {
         if ($request->has('q')) {
-            $recurso = $buscadorQuery->buscarQuery(Video::class);
-            return response()->json($recurso);
+            $resultadoQuery = $buscadorQuery->buscarQuery(Video::class);
+            return response()->json($resultadoQuery);
         }
 
-        $recursos = Video::all();
-
-        return response()->json($recursos);
+        $videos = $videoService->buscarTodosOsVideos($request->per_page);
+        return response()->json($videos);
     }
 
-    public function store(VideoFormRequest $request)
+    public function store(VideoFormRequest $request, VideoService $videoService)
     {
-        try {
-            $recursos = $request->all();
-            $recurso = Video::create($recursos);
+         try {
+            $video = $videoService->criarVideo($request->all());
         } catch (QueryException $e) {
-            return response()->json("Os campo nao foram preenchidos corretamente", 404);
-        }
+            return response()->json('Os campos nao foram preenchidos corretamente');
+        } 
 
-        return response()->json($recurso, 201);
+        return response()->json($video, 201);
     }
 
-    public function show($id)
+    public function show(VideoService $videoService ,int $id)
     {   
-        $recursos = Video::find($id);
-
-        if (is_null($recursos)) {
-            return response()->json([
-                'Recurso nao encontrado'
-            ], 404);
-        };
-
-        return response()->json($recursos, 200);
-    }
-
-    public function delete(VideoService $videoService ,$id)
-    {
-        $recurso = Video::find($id);
-    
-        $videoService->excluirVideo($recurso);
         try {
-            if (is_null($recurso)) {
-                throw new Exception();
-            }
-        } catch (Exception $e) {
-            return response()->json('Recurso nao encontrado', 404);
+            $video = $videoService->buscarVideo($id);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 404);
         }
-        
-        $recurso->delete();
-        return response()->json('Recurso excluido', 410);
+
+        return response()->json($video);
     }
 
-    public function update(VideoFormRequest $request, $id)
+    public function delete(VideoService $videoService , int $id)
     {
-    
-        $recursos = Video::find($id);
-        $recursos->titulo = $request->titulo;
-        $recursos->descricao = $request->descricao;
-        $recursos->url = $request->url;
-        $recursos->categoria_id = $request->categoria_id;
+        try {
+            $video = $videoService->excluirVideo($id);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
 
-        $recursos->save();
+        return response()->json($video . 'foi excluido com sucesso.', 410);
+    }
 
-        return response()->json([
-            'titulo' => $recursos->titulo,
-            'descricao' => $recursos->descricao,
-            'url' => $recursos->url,
-            'categoria_id' => $recursos->categoria_id
-        ], 201);
+    public function update(VideoFormRequest $request, int $id, VideoService $videoService)
+    {
+        try {
+            $video = $videoService->atualizarVideo(
+                $request->titulo, 
+                $request->descricao, 
+                $request->url,
+                $request->categoria_id, 
+                $id
+            );
+        } catch (QueryException $e) {
+            return response()->json('Os campos nao foram preenchidos corretamente.');
+        }
+
+        return response()->json($video, 200);
     }
 }

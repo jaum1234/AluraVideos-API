@@ -56,11 +56,13 @@ class VideoTest extends TestCase
         ];
 
         $this->put($this->url . '/2', $parametros, []);
-        $this->seeStatusCode(201);
+        $this->seeStatusCode(200);
         $this->seeJsonStructure([
             'titulo',
             'descricao',
             'url',
+            'created_at',
+            'updated_at',
             'categoria_id'
         ]);
         $this->seeInDatabase('videos', $parametros);
@@ -73,8 +75,6 @@ class VideoTest extends TestCase
             'titulo',
             'descricao',
             'url',
-            'created_at',
-            'updated_at',
             'categoria_id'
         ]);
         $this->seeStatusCode(200);

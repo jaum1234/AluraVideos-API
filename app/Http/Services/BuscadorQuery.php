@@ -7,10 +7,10 @@ class BuscadorQuery
     public function buscarQuery($classe)
     {
         $busca = request('q');
-        $recurso = $classe::query()
+        $resultado = $classe::query()
             ->where('titulo', 'like', '%' . $busca . '%')
             ->get();
             
-        return $recurso;
+        return $resultado;
     }
 }
