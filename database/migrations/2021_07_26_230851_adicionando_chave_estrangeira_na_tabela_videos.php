@@ -14,7 +14,7 @@ class AdicionandoChaveEstrangeiraNaTabelaVideos extends Migration
     public function up()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->integer('categoria_id');
+            $table->integer('categoria_id')->unsigned()->default(1);
 
             $table->foreign('categoria_id')
                 ->references('id')

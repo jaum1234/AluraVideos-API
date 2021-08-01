@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Database\Seeders\CategoriaSeeder;
 
-class DatabaseSeeder extends Seeder
+class CategoriaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(CategoriaSeeder::class);
+        DB::table('categorias')->insert([
+            'id' => 1,
+            'titulo' => 'Livre',
+            'cor' => 'gray'
+        ]);
     }
 }

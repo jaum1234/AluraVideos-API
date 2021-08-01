@@ -11,6 +11,16 @@ Class Video extends Model
     protected $fillable = [
         'titulo',
         'descricao',
-        'url'
+        'url',
+        'categoria_id'
     ];
+
+    protected $attributes = [
+        'categoria_id' => 1
+    ];
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
 }

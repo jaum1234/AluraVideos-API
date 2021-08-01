@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Validation\Rule;
 use Urameshibr\Requests\FormRequest;
 
-class VideoFormRequest extends FormRequest
+class CategoriaFormRequest extends FormRequest
 {
 	public function authorize()
 	{
@@ -16,8 +16,7 @@ class VideoFormRequest extends FormRequest
 	{
 		return [
 			'titulo' => 'required',
-            'descricao' => 'required',
-            'url' => 'required',
+			'cor' => 'required'
 		];
     }
 
