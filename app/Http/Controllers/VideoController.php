@@ -12,12 +12,14 @@ use App\Http\Services\VideoService;
 use Illuminate\Database\QueryException;
 Class VideoController extends Controller
 {
+    use BuscadorQuery;
+
     protected string $classe;
 
-    public function index(VideoService $videoService ,Request $request, BuscadorQuery $buscadorQuery)
+    public function index(VideoService $videoService ,Request $request)
     {
         if ($request->has('q')) {
-            $resultadoQuery = $buscadorQuery->buscarQuery(Video::class);
+            $resultadoQuery = $this->buscarQuery(Video::class);
             return response()->json($resultadoQuery);
         }
 
@@ -27,12 +29,7 @@ Class VideoController extends Controller
 
     public function store(VideoFormRequest $request, VideoService $videoService)
     {
-         try {
-            $video = $videoService->criarVideo($request->all());
-        } catch (QueryException $e) {
-            return response()->json('Os campos nao foram preenchidos corretamente');
-        } 
-
+        $video = $videoService->criarVideo($request->all());
         return response()->json($video, 201);
     }
 

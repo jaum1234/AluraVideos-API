@@ -2,7 +2,7 @@
 
 namespace App\Http\Services;
 
-class BuscadorQuery
+trait BuscadorQuery
 {
     public function buscarQuery($classe)
     {

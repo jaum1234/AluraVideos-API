@@ -25,7 +25,6 @@ class VideoService
 
         if (is_null($video)) {
            throw new \Exception("Esse vídeo nao existe");
-            
         };
 
         return $video;

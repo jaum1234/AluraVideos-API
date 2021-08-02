@@ -1,0 +1,15 @@
+Categoria
+ [x] Listar categorias
+ [x] Criar categorias with data set "parametros"
+ [x] Atualizar categoria with data set "parametros"
+ [x] Mostar categoria
+ [x] Deletar categoria
+ [x] Buscar video por categoria
+
+Video
+ [x] Listar videos
+ [x] Criar videos with data set "parametros"
+ [x] Atualizar video with data set "parametros"
+ [x] Mostar video
+ [x] Deletar video
+

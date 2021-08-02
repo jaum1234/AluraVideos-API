@@ -2,12 +2,15 @@
 
 namespace App\Exceptions;
 
+use Throwable;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Database\QueryException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Throwable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -49,6 +52,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json(['erro' => 'A rota nao foi encontrada.'], 404);
+        }
+        
+        if ($exception instanceof MethodNotAllowedHttpException) { 
+            return response()->json(['erro' => 'Método HTTP nao corresponde.']);
+        }
+
+        if ($exception instanceof QueryException) { 
+            return response()->json(['erro' => 'Os campos nao foram preenchidos corretamente.']);
+        }
+
         return parent::render($request, $exception);
     }
 }

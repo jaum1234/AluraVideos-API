@@ -21,13 +21,11 @@ class CategoriaTest extends TestCase
         
     } 
 
-    public function testCriarCategorias()
+    /**
+     * @dataProvider criarParametrosCategoria
+     */
+    public function testCriarCategorias($parametros)
     {
-        $parametros = [
-            'titulo' => 'titulo',
-            'cor' => 'cor'
-        ];
-
         $this->post($this->url, $parametros, []);
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
@@ -40,13 +38,12 @@ class CategoriaTest extends TestCase
 
     }
 
-    public function testAtualizarCategoria()
+    
+    /**
+     * @dataProvider criarParametrosCategoria
+     */
+    public function testAtualizarCategoria($parametros)
     {
-        $parametros = [
-            'titulo' => 'titulo',
-            'cor' => 'cor'
-        ];
-
         $this->put($this->url . '/5', $parametros, []);
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
@@ -81,5 +78,15 @@ class CategoriaTest extends TestCase
         $this->seeStatusCode(200);
     }
 
-    
+    public function criarParametrosCategoria()
+    {
+        $parametros = [
+            'titulo' => 'titulo',
+            'cor' => 'color'
+        ];
+
+        return [
+            'parametros' => [$parametros]
+        ];
+    }
 }

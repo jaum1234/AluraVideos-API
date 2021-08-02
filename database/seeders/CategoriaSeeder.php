@@ -17,7 +17,7 @@ class CategoriaSeeder extends Seeder
         DB::table('categorias')->insert([
             'id' => 1,
             'titulo' => 'Livre',
-            'cor' => 'gray'
+            'cor' => 'black'
         ]);
     }
 }

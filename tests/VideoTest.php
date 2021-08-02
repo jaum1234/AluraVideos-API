@@ -12,26 +12,13 @@ class VideoTest extends TestCase
     {
         $this->get($this->url, []);
         $this->seeStatusCode(200);
-        $this->seeJsonStructure(['*' => [
-            'titulo',
-            'descricao',
-            'url',
-            'created_at',
-            'updated_at',
-            'categoria_id'
-        ]]);
-        
     }
 
-    public function testCriarVideos()
+    /**
+     * @dataProvider criarParametrosVideo
+     */
+    public function testCriarVideos($parametros)
     {
-        $parametros = [
-            'titulo' => 'titulo',
-            'descricao' => 'descricao',
-            'url' => 'http://url.com',
-            'categoria_id' => 1
-        ];
-
         $this->post($this->url, $parametros, []);
         $this->seeStatusCode(201);
         $this->seeInDatabase('videos', $parametros);
@@ -46,15 +33,11 @@ class VideoTest extends TestCase
 
     }
 
-    public function testAtualizarVideo()
+    /**
+     * @dataProvider criarParametrosVideo
+     */
+    public function testAtualizarVideo($parametros)
     {
-        $parametros = [
-            'titulo' => 'titulo',
-            'descricao' => 'descricao',
-            'url' => 'http://url.com',
-            'categoria_id' => 1
-        ];
-
         $this->put($this->url . '/2', $parametros, []);
         $this->seeStatusCode(200);
         $this->seeJsonStructure([
@@ -88,5 +71,17 @@ class VideoTest extends TestCase
     }
 
 
-    
+    public function criarParametrosVideo()
+    {
+        $parametros = [
+            'titulo' => 'titulo',
+            'descricao' => 'descricao',
+            'url' => 'http://url.com',
+            'categoria_id' => 1
+        ];
+
+        return [
+            'parametros' => [$parametros]
+        ];
+    }
 }
