@@ -15,6 +15,8 @@ Class Categoria extends Model
         'cor',
     ];
 
+    protected $perPage = 5;
+
     public function videos()
     {
         return $this->hasMany(Video::class);

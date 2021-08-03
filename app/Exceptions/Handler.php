@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof QueryException) { 
-            return response()->json(['erro' => 'Os campos nao foram preenchidos corretamente.']);
+            return response()->json(['erro' => 'Falha na busca.']);
         }
 
         return parent::render($request, $exception);

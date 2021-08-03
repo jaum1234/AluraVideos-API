@@ -18,7 +18,9 @@ Class VideoController extends Controller
 
     public function index(VideoService $videoService ,Request $request)
     {
-        if ($request->has('q')) {
+        $requestTemQuery = $request->has('q');
+        
+        if ($requestTemQuery) {
             $resultadoQuery = $this->buscarQuery(Video::class);
             return response()->json($resultadoQuery);
         }
@@ -70,5 +72,11 @@ Class VideoController extends Controller
         }
 
         return response()->json($video, 200);
+    }
+
+    public function total(VideoService $videoService)
+    {
+        $videos = $videoService->buscarVidosParaUsuarioNaoAutenticado();
+        return response()->json($videos);
     }
 }

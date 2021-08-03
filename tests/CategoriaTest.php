@@ -11,12 +11,6 @@ class CategoriaTest extends TestCase
     public function testListarCategorias()
     {
         $this->get($this->url, []);
-        $this->seeJsonStructure(['*' => [
-            'titulo',
-            'cor',
-            'created_at',
-            'updated_at',
-        ]]);
         $this->seeStatusCode(200);
         
     } 

@@ -19,6 +19,8 @@ Class Video extends Model
         'categoria_id' => 1
     ];
 
+    protected $perPage = 5;
+
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);

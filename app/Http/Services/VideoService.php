@@ -36,8 +36,7 @@ class VideoService
         $videoUrl, 
         $videoCategoriaId, 
         $videoId
-        )
-    {
+    ) {
         $video = Video::find($videoId);
 
         $video->titulo = $videoTitulo;
@@ -59,6 +58,12 @@ class VideoService
         }        
         $video->delete();
         return $video->titulo;
+    }
+
+    public function buscarVidosParaUsuarioNaoAutenticado()
+    {
+        $videos = Video::query()->limit(5)->get();
+        return $videos;
     }
 
 }

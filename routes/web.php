@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
     $router->group(['prefix' => '/api/videos'], function () use ($router) {
+            $router->get('/free', 'VideoController@total');
             $router->get('', 'VideoController@index');
             $router->get('/{id}', 'VideoController@show');
             $router->post('', 'VideoController@store');

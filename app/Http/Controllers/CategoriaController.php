@@ -10,14 +10,24 @@ use App\Http\Requests\CategoriaFormRequest;
 use App\Http\Requests\VideoFormRequest;
 use Illuminate\Database\QueryException;
 use App\Http\Controllers\BaseController;
+use App\Http\Services\BuscadorQuery;
 
 Class CategoriaController extends Controller
 {
+    use BuscadorQuery;
+
     protected string $classe;
 
     public function index(Request $request)
     {
-        $recursos = Categoria::all();
+        $requestTemQuery = $request->has('q');
+        
+        if ($requestTemQuery) {
+            $resultadoQuery = $this->buscarQuery(Categoria::class);
+            return response()->json($resultadoQuery);
+        }
+
+        $recursos = Categoria::paginate($request->per_page);
 
         return response()->json($recursos);
     }
