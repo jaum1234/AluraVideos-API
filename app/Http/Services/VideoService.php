@@ -60,7 +60,7 @@ class VideoService
         return $video->titulo;
     }
 
-    public function buscarVidosParaUsuarioNaoAutenticado()
+    public function buscarVideosParaUsuarioNaoAutenticado()
     {
         $videos = Video::query()->limit(5)->get();
         return $videos;

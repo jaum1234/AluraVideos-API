@@ -60,9 +60,7 @@ class Handler extends ExceptionHandler
             return response()->json(['erro' => 'Método HTTP nao corresponde.']);
         }
 
-        if ($exception instanceof QueryException) { 
-            return response()->json(['erro' => 'Falha na busca.']);
-        }
+        
 
         return parent::render($request, $exception);
     }

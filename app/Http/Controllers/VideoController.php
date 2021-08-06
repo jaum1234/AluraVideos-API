@@ -74,9 +74,9 @@ Class VideoController extends Controller
         return response()->json($video, 200);
     }
 
-    public function total(VideoService $videoService)
+    public function livre(VideoService $videoService)
     {
-        $videos = $videoService->buscarVidosParaUsuarioNaoAutenticado();
+        $videos = $videoService->buscarVideosParaUsuarioNaoAutenticado();
         return response()->json($videos);
     }
 }
