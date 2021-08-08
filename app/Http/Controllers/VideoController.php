@@ -26,7 +26,7 @@ Class VideoController extends Controller
         }
 
         $videos = $videoService->buscarTodosOsVideos($request->per_page);
-        return response()->json($videos);
+        return response()->json(['recurso' => $videos]);
     }
 
     public function store(VideoFormRequest $request, VideoService $videoService)
@@ -54,7 +54,7 @@ Class VideoController extends Controller
             return response()->json($e->getMessage());
         }
 
-        return response()->json($video . 'foi excluido com sucesso.', 410);
+        return response()->json(['Mensagem' => $video . ' foi excluido com sucesso.'], 410);
     }
 
     public function update(VideoFormRequest $request, int $id, VideoService $videoService)

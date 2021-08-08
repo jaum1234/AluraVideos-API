@@ -15,6 +15,7 @@ class CategoriaSeeder extends Seeder
     public function run()
     {
         DB::table('categorias')->insert([
+            'id' => 1,
             'titulo' => 'Livre',
             'cor' => 'black'
         ]);

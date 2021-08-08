@@ -1,26 +1,26 @@
 <?php
 
+use App\Models\Categoria;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class CategoriaTest extends TestCase
 {
     use DatabaseTransactions;
     
-    private $url = '/api/categorias';
+    private $url = '/api/categorias/';
 
     public function testListarCategorias()
     {
-        $this->get($this->url, []);
+        $this->get($this->url);
         $this->seeStatusCode(200);
-        
     } 
 
     /**
-     * @dataProvider criarParametrosCategoria
+     * @dataProvider criarParametros
      */
     public function testCriarCategorias($parametros)
     {
-        $this->post($this->url, $parametros, []);
+        $this->post($this->url, $parametros);
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
             'titulo',
@@ -31,14 +31,20 @@ class CategoriaTest extends TestCase
         $this->seeInDatabase('categorias', $parametros);
 
     }
-
     
     /**
      * @dataProvider criarParametrosCategoria
      */
     public function testAtualizarCategoria($parametros)
     {
-        $this->put($this->url . '/5', $parametros, []);
+        $categoria = Categoria::create([
+            'titulo' => 'titulo',
+            'cor' => 'color'
+        ]);
+
+        $id = $categoria->id;
+
+        $this->put($this->url . $id, $parametros);
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
             'titulo',
@@ -49,7 +55,14 @@ class CategoriaTest extends TestCase
 //
     public function testMostarCategoria()
     {
-        $this->get($this->url . '/5', []);
+        $categoria = Categoria::create([
+            'titulo' => 'titulo',
+            'cor' => 'color'
+        ]);
+
+        $id = $categoria->id;
+
+        $this->get($this->url . $id);
         $this->seeJsonStructure([
             'titulo',
             'cor',
@@ -61,18 +74,32 @@ class CategoriaTest extends TestCase
 //
     public function testDeletarCategoria()
     {
-       $this->delete($this->url . '/5', []);
+        $categoria = Categoria::create([
+            'titulo' => 'titulo',
+            'cor' => 'color'
+        ]);
+
+        $id = $categoria->id;
+
+       $this->delete($this->url . $id);
        $this->seeJsonStructure([]);
        $this->seeStatusCode(410);
     }
 
     public function testBuscarVideoPorCategoria()
     {
-        $this->get($this->url . '/1/videos');
+        $categoria = Categoria::create([
+            'titulo' => 'titulo',
+            'cor' => 'color'
+        ]);
+
+        $id = $categoria->id;
+
+        $this->get($this->url . $id . '/videos');
         $this->seeStatusCode(200);
     }
 
-    public function criarParametrosCategoria()
+    public function criarParametros()
     {
         $parametros = [
             'titulo' => 'titulo',
