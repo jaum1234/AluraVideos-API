@@ -22,30 +22,28 @@ class AuthController extends Controller
         $this->authService = new AuthService();
     }
 
-    public function registrar(Request $request)
+    public function register(RegistroFormRequest $request)
     {
-        $user = new User();
+        try {
+            $this->authService->registrar($request);
+        } catch (\Exception $e) {
+            return response()->json('Dados incorretos', 400);
+        }
 
-        $user->name = $request->name;
-        $user->password = Hash::make($request->password);
-        $user->email = $request->email;
-        $user->save();
-
-        
+        return response()->json('Cadastro realizado com sucesso.', 201);
         
     }
 
-    public function login(Request $request)
+    public function login(LoginFormRequest $request)
     {
+        
         $credenciais = request(['email', 'password']);
-
         try {
             $token = $this->authService->logar($credenciais);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 401);
         }
         
-
         return $this->respondWithToken($token);
     }
 

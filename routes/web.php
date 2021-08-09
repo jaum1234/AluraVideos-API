@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 */
 
 $router->post('/api/login', 'AuthController@login');
-$router->post('/api/registrar', 'AuthController@registrar');
+$router->post('/api/register', 'AuthController@register');
 
 $router->group(['prefix' => '/api/videos'], function () use ($router) {
         $router->get('/free', 'VideoController@livre');

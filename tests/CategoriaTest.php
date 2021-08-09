@@ -33,14 +33,11 @@ class CategoriaTest extends TestCase
     }
     
     /**
-     * @dataProvider criarParametrosCategoria
+     * @dataProvider criarParametros
      */
     public function testAtualizarCategoria($parametros)
     {
-        $categoria = Categoria::create([
-            'titulo' => 'titulo',
-            'cor' => 'color'
-        ]);
+        $categoria = Categoria::create($parametros);
 
         $id = $categoria->id;
 

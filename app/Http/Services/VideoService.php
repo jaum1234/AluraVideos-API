@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Requests\VideoFormRequest;
 use App\Models\Video;
 use Illuminate\Http\Request;
 
@@ -30,19 +31,14 @@ class VideoService
         return $video;
     }
 
-    public function atualizarVideo(
-        $videoTitulo, 
-        $videoDescricao, 
-        $videoUrl, 
-        $videoCategoriaId, 
-        $videoId
-    ) {
+    public function atualizarVideo(VideoFormRequest $request, int $videoId) 
+    {
         $video = Video::find($videoId);
 
-        $video->titulo = $videoTitulo;
-        $video->descricao = $videoDescricao;
-        $video->url = $videoUrl;
-        $video->categoria_id = $videoCategoriaId;
+        $video->titulo = $request->titulo;
+        $video->descricao = $request->descricao;
+        $video->url = $request->url;
+        $video->categoria_id = $request->categoria_id;
 
         $video->save();
 

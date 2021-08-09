@@ -11,12 +11,19 @@ use App\Http\Requests\VideoFormRequest;
 use Illuminate\Database\QueryException;
 use App\Http\Controllers\BaseController;
 use App\Http\Services\BuscadorQuery;
+use App\Http\Services\CategoriaService;
 
 Class CategoriaController extends Controller
 {
     use BuscadorQuery;
 
     protected string $classe;
+    private CategoriaService $categoriaService;
+
+    public function __construct()
+    {
+        $this->categoriaService = new CategoriaService;
+    }
 
     public function index(Request $request)
     {
@@ -35,8 +42,7 @@ Class CategoriaController extends Controller
     public function store(CategoriaFormRequest $request)
     {
         try {
-            $recursos = $request->all();
-            $recurso = Categoria::create($recursos);
+            $recurso = $this->categoriaService->criarCategoria($request);
         } catch (QueryException $e) {
             return response()->json("Os campo nao foram preenchidos corretamente", 404);
         }
@@ -46,21 +52,18 @@ Class CategoriaController extends Controller
 
     public function show($id)
     {   
-        $recursos = Categoria::find($id);
+        try {
+            $recurso = $this->categoriaService->buscarCategoria($id);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 404);
+        }
 
-        if (is_null($recursos)) {
-            return response()->json([
-                'Recurso nao encontrado'
-            ], 404);
-        };
-
-        return response()->json($recursos, 200);
+        return response()->json($recurso, 200);
     }
 
     public function delete($id)
     {
-        $recurso = Categoria::find($id);
-
+        
         try {
             if ($id == 1) {
                 throw new Exception();
@@ -68,23 +71,10 @@ Class CategoriaController extends Controller
         } catch (Exception $e) {
             return response()->json("Essa categoria nao pode ser excluida");
         }
-
-        $videos = $recurso->videos;
-
-        foreach ($videos as $video) {
-            $video->categoria_id = 1;
-            $video->save();
-        }
         
-        try {
-            if (is_null($recurso)) {
-                throw new Exception('Recurso nao encontrado.');
-            }
-        } catch (Exception $e) {
-            return response()->json($e->getMessage(), 404);
-        }
+        $recurso = $this->categoriaService->excluirCategoria($id);
         
-        $recurso->delete();
+        
         return response()->json('Recurso excluido', 410);
     }
 

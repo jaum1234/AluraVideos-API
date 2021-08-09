@@ -15,8 +15,14 @@ Class VideoController extends Controller
     use BuscadorQuery;
 
     protected string $classe;
+    private $videoService;
 
-    public function index(VideoService $videoService ,Request $request)
+    public function __construct()
+    {
+        $this->videoService = new VideoService();
+    }
+
+    public function index(Request $request)
     {
         $requestTemQuery = $request->has('q');
         
@@ -25,20 +31,20 @@ Class VideoController extends Controller
             return response()->json($resultadoQuery);
         }
 
-        $videos = $videoService->buscarTodosOsVideos($request->per_page);
+        $videos = $this->videoService->buscarTodosOsVideos($request->per_page);
         return response()->json(['recurso' => $videos]);
     }
 
-    public function store(VideoFormRequest $request, VideoService $videoService)
+    public function store(VideoFormRequest $request)
     {
-        $video = $videoService->criarVideo($request->all());
+        $video = $this->videoService->criarVideo($request->all());
         return response()->json($video, 201);
     }
 
-    public function show(VideoService $videoService ,int $id)
+    public function show(int $id)
     {   
         try {
-            $video = $videoService->buscarVideo($id);
+            $video = $this->videoService->buscarVideo($id);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 404);
         }
@@ -46,10 +52,10 @@ Class VideoController extends Controller
         return response()->json($video);
     }
 
-    public function delete(VideoService $videoService , int $id)
+    public function delete(int $id)
     {
         try {
-            $video = $videoService->excluirVideo($id);
+            $video = $this->videoService->excluirVideo($id);
         } catch (\Exception $e) {
             return response()->json($e->getMessage());
         }
@@ -57,16 +63,10 @@ Class VideoController extends Controller
         return response()->json(['Mensagem' => $video . ' foi excluido com sucesso.'], 410);
     }
 
-    public function update(VideoFormRequest $request, int $id, VideoService $videoService)
+    public function update(VideoFormRequest $request, int $id)
     {
         try {
-            $video = $videoService->atualizarVideo(
-                $request->titulo, 
-                $request->descricao, 
-                $request->url,
-                $request->categoria_id, 
-                $id
-            );
+            $video = $this->videoService->atualizarVideo($request, $id);
         } catch (QueryException $e) {
             return response()->json('Os campos nao foram preenchidos corretamente.');
         }
@@ -74,9 +74,9 @@ Class VideoController extends Controller
         return response()->json($video, 200);
     }
 
-    public function livre(VideoService $videoService)
+    public function livre()
     {
-        $videos = $videoService->buscarVideosParaUsuarioNaoAutenticado();
+        $videos = $this->videoService->buscarVideosParaUsuarioNaoAutenticado();
         return response()->json($videos);
     }
 }

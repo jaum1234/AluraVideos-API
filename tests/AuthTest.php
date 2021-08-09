@@ -10,23 +10,26 @@ Class AuthTest extends TestCase
 
     public function testDeveLogarUmUsuario()
     {
-        $this->expectException(\Exception::class);
 
         $user = new User();
-        $email = $user->email = 'email@domain.com';
+        $email = $user->email = 'jon@domain.com';
         $nome = $user->name = 'name';
         $senha = $user->password = Hash::make('senha');
         $user->save();
 
-        $this->post('/api/login', ['email' => $email, 'password' => $senha]);
-
+        $this->post('/api/login', ['email' => $email, 'password' => 'senha']);
+        $this->seeJsonStructure([
+            'access_token',
+            'token_type',
+            'expires_in'
+        ]);
         $this->seeStatusCode(200);
     }
 
     public function testDeveRegistrarUmUsuario()
     {
         $user = new User();
-        $email = $user->email = 'emailll@domain.com';
+        $email = $user->email = 'email@domain.com';
         $nome = $user->name = 'name';
         $senha = $user->password = Hash::make('senha');
         $dados = [
@@ -35,8 +38,8 @@ Class AuthTest extends TestCase
             'password' => $senha
         ];
 
-        $this->post('/api/registrar', $dados);
-        $this->seeInDatabase('users', ['email' => 'emailll@domain.com']);
-        $this->seeStatusCode(308);
+        $this->post('/api/register', $dados);
+        $this->seeInDatabase('users', ['email' => 'email@domain.com']);
+        $this->seeStatusCode(201);
     }
 }
