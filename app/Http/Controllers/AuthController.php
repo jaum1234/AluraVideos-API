@@ -24,14 +24,8 @@ class AuthController extends Controller
 
     public function register(RegistroFormRequest $request)
     {
-        try {
-            $this->authService->registrar($request);
-        } catch (\Exception $e) {
-            return response()->json('Dados incorretos', 400);
-        }
-
+        $this->authService->registrar($request);
         return response()->json('Cadastro realizado com sucesso.', 201);
-        
     }
 
     public function login(LoginFormRequest $request)

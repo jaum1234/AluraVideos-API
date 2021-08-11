@@ -9,8 +9,13 @@ class CategoriaTest extends TestCase
     
     private $url = '/api/categorias/';
 
-    public function testListarCategorias()
+    /**
+    * @dataProvider criarParametros
+    */
+    public function testDeveListarCategorias($parametros)
     {
+        $categoria = Categoria::create($parametros);
+
         $this->get($this->url);
         $this->seeStatusCode(200);
     } 
@@ -18,7 +23,7 @@ class CategoriaTest extends TestCase
     /**
      * @dataProvider criarParametros
      */
-    public function testCriarCategorias($parametros)
+    public function testDeveCriarCategoria($parametros)
     {
         $this->post($this->url, $parametros);
         $this->seeStatusCode(201);
@@ -35,10 +40,9 @@ class CategoriaTest extends TestCase
     /**
      * @dataProvider criarParametros
      */
-    public function testAtualizarCategoria($parametros)
+    public function testDeveAtualizarCategoria($parametros)
     {
         $categoria = Categoria::create($parametros);
-
         $id = $categoria->id;
 
         $this->put($this->url . $id, $parametros);
@@ -50,12 +54,12 @@ class CategoriaTest extends TestCase
         $this->seeInDatabase('categorias', $parametros);
     }
 //
-    public function testMostarCategoria()
+    /**
+    * @dataProvider criarParametros
+    */
+    public function testDeveBuscarUmaUnicaCategoria($parametros)
     {
-        $categoria = Categoria::create([
-            'titulo' => 'titulo',
-            'cor' => 'color'
-        ]);
+        $categoria = Categoria::create($parametros);
 
         $id = $categoria->id;
 
@@ -69,12 +73,12 @@ class CategoriaTest extends TestCase
         $this->seeStatusCode(200);
     }
 //
-    public function testDeletarCategoria()
+    /**
+     * @dataProvider criarParametros
+     */
+    public function testDeveDeletarCategoria($parametros)
     {
-        $categoria = Categoria::create([
-            'titulo' => 'titulo',
-            'cor' => 'color'
-        ]);
+        $categoria = Categoria::create($parametros);
 
         $id = $categoria->id;
 
@@ -83,15 +87,19 @@ class CategoriaTest extends TestCase
        $this->seeStatusCode(410);
     }
 
-    public function testBuscarVideoPorCategoria()
-    {
-        $categoria = Categoria::create([
-            'titulo' => 'titulo',
-            'cor' => 'color'
-        ]);
-
+    /**
+     * @dataProvider criarParametros
+     */
+    public function testDeveBuscarVideoPorCategoria($parametros)
+    { 
+        $categoria = Categoria::create($parametros);
         $id = $categoria->id;
-
+        $categoria->videos()->create([
+            'titulo' => 'titulo',
+            'descricao' => 'descricao',
+            'url' => 'url',
+        ]);
+        
         $this->get($this->url . $id . '/videos');
         $this->seeStatusCode(200);
     }
@@ -107,4 +115,14 @@ class CategoriaTest extends TestCase
             'parametros' => [$parametros]
         ];
     }
+
+    //public function criarParametrosVideos()
+    //{
+    //    $parametros = [
+    //        'titulo' => 'titulo',
+    //        'descricao' => 'descricao',
+    //        'url' => 'url',
+    //        'categoria_id' => 1
+    //    ];
+    //}
 }

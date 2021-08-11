@@ -15,7 +15,7 @@ Class VideoController extends Controller
     use BuscadorQuery;
 
     protected string $classe;
-    private $videoService;
+    private VideoService $videoService;
 
     public function __construct()
     {
@@ -32,7 +32,7 @@ Class VideoController extends Controller
         }
 
         $videos = $this->videoService->buscarTodosOsVideos($request->per_page);
-        return response()->json(['recurso' => $videos]);
+        return response()->json($videos);
     }
 
     public function store(VideoFormRequest $request)

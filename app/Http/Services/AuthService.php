@@ -9,16 +9,6 @@ use App\Http\Requests\RegistroFormRequest;
 
 class AuthService 
 {
-    public function logar($credenciais)
-    {
-        $token = Auth::attempt($credenciais);
-        if (!$token) {
-            throw new \Exception('Nao autorizado');
-        }
-
-        return $token;
-    }
-
     public function registrar(RegistroFormRequest $request)
     {
         $user = new User();
@@ -30,4 +20,15 @@ class AuthService
 
         return $user;
     }
+    
+    public function logar($credenciais)
+    {
+        $token = Auth::attempt($credenciais);
+        if (!$token) {
+            throw new \Exception('Nao autorizado');
+        }
+
+        return $token;
+    }
+
 }

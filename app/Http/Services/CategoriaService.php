@@ -4,11 +4,14 @@ namespace App\Http\Services;
 
 use App\Http\Requests\CategoriaFormRequest;
 use App\Models\Categoria;
+use Exception;
 use Illuminate\Http\Request;
+
+use function PHPUnit\Framework\isNull;
 
 class CategoriaService 
 {
-    public function buscarTodosOsCategorias($categoriasPorPagina)
+    public function buscarTodosAsCategorias($categoriasPorPagina)
     {
         $categorias = Categoria::paginate($categoriasPorPagina);
         return $categorias;
@@ -25,7 +28,7 @@ class CategoriaService
         $categoria = Categoria::find($id);
 
         if (is_null($categoria)) {
-           throw new \Exception("Essa categoria nao existe");
+           throw new \DomainException("Essa categoria nao existe");
         };
 
         return $categoria;
@@ -33,13 +36,18 @@ class CategoriaService
 
     public function atualizarCategoria(CategoriaFormRequest $request, int $categoriaId) 
     {
+        if ($categoriaId == 1) {
+            throw new \Exception('Essa categoria nao pode ser alterada.');
+        }
+
         $categoria = Categoria::find($categoriaId);
+        
+        if (is_null($categoria)) {
+            throw new \DomainException('Recurso nao encontrado.');
+        }
 
         $categoria->titulo = $request->titulo;
-        $categoria->descricao = $request->descricao;
-        $categoria->url = $request->url;
-        $categoria->categoria_id = $request->categoria_id;
-
+        $categoria->cor = $request->cor;
         $categoria->save();
 
         return $categoria;
@@ -47,21 +55,37 @@ class CategoriaService
 
     public function excluirCategoria($categoriaId)
     {
-        $recurso = Categoria::find($categoriaId);
-
-        $videos = $recurso->videos;
+        if ($categoriaId == 1) {
+            throw new \Exception('Essa categoria nao pode ser alterada.');
+        }
+        
+        $categoria = Categoria::find($categoriaId);
+        
+        if (is_null($categoria)) {
+            throw new \DomainException('Recurso nao foi encontrado.');
+        }
+        
+        $videos = $categoria->videos;
 
         foreach ($videos as $video) {
             $video->categoria_id = 1;
             $video->save();
         }
         
-        if (is_null($recurso)) {
-            throw new \Exception('Recurso nao encontrado.');
+        $categoria->delete();
+        return $categoria->titulo;
+    }
+
+    public function buscarVideoPorCategoria(int $id)
+    {
+        $categoria = Categoria::find($id);
+        if (is_null($categoria)) {
+            throw new \DomainException('Recurso nao foi encontrada.');
         }
-        
-        $recurso->delete();
-        return $recurso->titulo;
+
+        $videos = $categoria->videos;
+
+        return $videos;
     }
 
     public function buscarCategoriasParaUsuarioNaoAutenticado()
@@ -70,8 +94,5 @@ class CategoriaService
         return $categorias;
     }
 
-    private function verificarSeCategoriaIdIgualUm() {
-        
-    }
 
 }

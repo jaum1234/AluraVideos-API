@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\VideoController;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Support\Facades\Hash;
@@ -10,20 +11,19 @@ class VideoTest extends TestCase
     use DatabaseTransactions;
     
     private $url = 'api/videos/';
-    private $user;
-
-    //protected function setUp(): void
-    //{
-    //    
-    //}
     
-    
-    
-    public function testDeveListaTodosOsVideos()
+    /**
+     * @dataProvider criarParametros
+     */
+    public function testDeveListaTodosOsVideos($parametros)
     {
+
+        $video1 = Video::create($parametros);
+        $video2 = Video::create($parametros);
+        $video3 = Video::create($parametros);
+
         $this->get($this->url);
-        $this->seeStatusCode(200);
-           
+        $this->seeStatusCode(200);   
     }
 
     /**
@@ -34,7 +34,6 @@ class VideoTest extends TestCase
     {
         $this->post($this->url, $parametrosVideo);
         $this->seeStatusCode(201);
-        $this->seeInDatabase('videos', $parametrosVideo);
         $this->seeJsonStructure([
             'titulo',
             'descricao',
@@ -43,7 +42,7 @@ class VideoTest extends TestCase
             'updated_at',
             'categoria_id'
         ]);
-
+        $this->seeInDatabase('videos', $parametrosVideo);
     }
 
     /**
@@ -51,13 +50,7 @@ class VideoTest extends TestCase
      */
     public function testDeveAtualizarUmVideo($parametros)
     {
-        $video = Video::create([
-            'titulo' => 'titulo',
-            'descricao' => 'descricao',
-            'url' => 'http://url.com',
-            'categoria_id' => 1
-        ]);
-
+        $video = Video::create($parametros);
         $id = $video->id;
 
         $this->put($this->url . $id, $parametros);
@@ -72,16 +65,13 @@ class VideoTest extends TestCase
         ]);
         $this->seeInDatabase('videos', $parametros);
     }
-//
-    public function testDeveMostrarUmVideo()
-    {
-        $video = Video::create([
-            'titulo' => 'titulo',
-            'descricao' => 'descricao',
-            'url' => 'http://url.com',
-            'categoria_id' => 1
-        ]);
 
+   /**
+    *  @dataProvider criarParametros
+    */
+    public function testDeveMostrarUmVideo($parametros)
+    {
+        $video = Video::create($parametros);
         $id = $video->id;
 
         $this->get($this->url . $id);
@@ -94,20 +84,18 @@ class VideoTest extends TestCase
         $this->seeStatusCode(200);
     }
 //
-    public function testDeveDeletarUmVideo()
-    {
-        $video = Video::create([
-            'titulo' => 'titulo',
-            'descricao' => 'descricao',
-            'url' => 'http://url.com',
-            'categoria_id' => 1
-        ]);
 
+    /**
+     *  @dataProvider criarParametros
+     */
+    public function testDeveDeletarUmVideo($parametros)
+    {
+        $video = Video::create($parametros);
         $id = $video->id;
 
-       $this->delete($this->url . $id);
-       $this->seeJsonStructure(['Mensagem']);
-       $this->seeStatusCode(410);
+        $this->delete($this->url . $id);
+        $this->seeJsonStructure(['Mensagem']);
+        $this->seeStatusCode(410);
     }
 
 

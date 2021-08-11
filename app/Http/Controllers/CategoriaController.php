@@ -12,18 +12,19 @@ use Illuminate\Database\QueryException;
 use App\Http\Controllers\BaseController;
 use App\Http\Services\BuscadorQuery;
 use App\Http\Services\CategoriaService;
+use InvalidArgumentException;
 
 Class CategoriaController extends Controller
 {
     use BuscadorQuery;
 
-    protected string $classe;
     private CategoriaService $categoriaService;
 
     public function __construct()
     {
-        $this->categoriaService = new CategoriaService;
+        $this->categoriaService = new CategoriaService();
     }
+    
 
     public function index(Request $request)
     {
@@ -34,9 +35,9 @@ Class CategoriaController extends Controller
             return response()->json($resultadoQuery);
         }
 
-        $recursos = Categoria::paginate($request->per_page);
+        $categorias = $this->categoriaService->buscarTodosAsCategorias($request->per_page);
 
-        return response()->json($recursos);
+        return response()->json($categorias);
     }
 
     public function store(CategoriaFormRequest $request)
@@ -50,60 +51,50 @@ Class CategoriaController extends Controller
         return response()->json($recurso, 201);
     }
 
-    public function show($id)
+    public function show(int $id)
     {   
         try {
-            $recurso = $this->categoriaService->buscarCategoria($id);
-        } catch (\Exception $e) {
+            $categoria = $this->categoriaService->buscarCategoria($id);
+        } catch (\DomainException $e) {
             return response()->json($e->getMessage(), 404);
         }
 
-        return response()->json($recurso, 200);
+        return response()->json($categoria, 200);
     }
 
     public function delete($id)
     {
-        
         try {
-            if ($id == 1) {
-                throw new Exception();
-            }
-        } catch (Exception $e) {
-            return response()->json("Essa categoria nao pode ser excluida");
+            $recurso = $this->categoriaService->excluirCategoria($id);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 403);
+        } catch (\DomainException $e) {
+            return response()->json($e->getMessage(), 404);
         }
         
-        $recurso = $this->categoriaService->excluirCategoria($id);
-        
-        
-        return response()->json('Recurso excluido', 410);
+        return response()->json($recurso . ' excluido', 410);
     }
 
-    public function update(CategoriaFormRequest $request, $id)
+    public function update(CategoriaFormRequest $request, int $id)
     {
         try {
-            if ($id == 1) {
-                throw new Exception();
-            }
-        } catch (Exception $e) {
-            return response()->json("Essa categoria nao pode ser alterada");
+            $categoria = $this->categoriaService->atualizarCategoria($request ,$id);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 403);
+        } catch (\DomainException $e) {
+            return response()->json($e->getMessage(), 404);
         }
 
-        $recursos = Categoria::find($id);
-        $recursos->titulo = $request->titulo;
-        $recursos->cor = $request->cor;
-
-        $recursos->save();
-
-        return response()->json([
-            'titulo' => $recursos->titulo,
-            'cor' => $recursos->cor,
-        ], 201);
+        return response()->json($categoria ,201);
     }
 
-    public function buscarVideoPorCategoria(int $id)
+    public function videoPorCategoria(int $id)
     {
-        $categoria = Categoria::find($id);
-        $categoria->videos;
-        return response()->json($categoria);
+        try {
+            $videos = $this->categoriaService->buscarVideoPorCategoria($id);
+        } catch (\DomainException $e) {
+            return response()->json($e->getMessage(), 404);
+        }
+        return response()->json($videos);
     }
 }

@@ -40,7 +40,7 @@ $router->group(['prefix' => '/api/categorias'], function () use ($router) {
         $router->post('', 'CategoriaController@store');
         $router->put('/{id}', 'CategoriaController@update');
         $router->delete('/{id}', 'CategoriaController@delete');
-        $router->get('/{id}/videos', 'CategoriaController@buscarVideoPorCategoria');
+        $router->get('/{id}/videos', 'CategoriaController@videoPorCategoria');
 });
 
 
