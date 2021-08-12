@@ -88,11 +88,4 @@ class CategoriaService
         return $videos;
     }
 
-    public function buscarCategoriasParaUsuarioNaoAutenticado()
-    {
-        $categorias = Categoria::query()->limit(5)->get();
-        return $categorias;
-    }
-
-
 }

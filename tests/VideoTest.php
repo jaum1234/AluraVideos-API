@@ -21,7 +21,7 @@ class VideoTest extends TestCase
         $video1 = Video::create($parametros);
         $video2 = Video::create($parametros);
         $video3 = Video::create($parametros);
-
+        $this->seeInDatabase('videos', $parametros);
         $this->get($this->url);
         $this->seeStatusCode(200);   
     }
@@ -52,7 +52,7 @@ class VideoTest extends TestCase
     {
         $video = Video::create($parametros);
         $id = $video->id;
-
+        
         $this->put($this->url . $id, $parametros);
         $this->seeStatusCode(200);
         $this->seeJsonStructure([
@@ -73,6 +73,7 @@ class VideoTest extends TestCase
     {
         $video = Video::create($parametros);
         $id = $video->id;
+        $this->seeInDatabase('videos', $parametros);
 
         $this->get($this->url . $id);
         $this->seeJsonStructure([
@@ -92,10 +93,37 @@ class VideoTest extends TestCase
     {
         $video = Video::create($parametros);
         $id = $video->id;
+        $this->seeInDatabase('videos', $parametros);
 
         $this->delete($this->url . $id);
-        $this->seeJsonStructure(['Mensagem']);
+        $this->seeJsonStructure(['sucesso']);
         $this->seeStatusCode(410);
+    }
+
+    /**
+     *  @dataProvider criarParametros
+     */
+    public function testDeveBuscarVideosParaUsuarioNaoAutenticado($parametros)
+    {
+        $video1 = Video::create($parametros);
+        $video2 = Video::create($parametros);
+        $video3 = Video::create($parametros);
+        $video4 = Video::create($parametros);
+        $video5 = Video::create($parametros);
+        $this->seeInDatabase('videos', $parametros);
+
+        $this->get($this->url . 'free');
+        $this->seeStatusCode(200);
+        $this->seeJsonStructure([
+            '*' => [
+                'titulo',
+                'descricao',
+                'url',
+                'created_at',
+                'updated_at',
+                'categoria_id',
+            ],
+        ]);
     }
 
 

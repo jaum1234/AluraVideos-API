@@ -1,3 +1,20 @@
+Auth
+ [x] Deve registrar um usuario
+ [x] Deve logar um usuario
+
 Categoria
- [ ] Deve lancar excecao se uma categoria nao existir
+ [x] Deve listar categorias with data set "parametros"
+ [x] Deve criar categoria with data set "parametros"
+ [x] Deve atualizar categoria with data set "parametros"
+ [x] Deve buscar uma unica categoria with data set "parametros"
+ [x] Deve deletar categoria with data set "parametros"
+ [x] Deve buscar video por categoria with data set "parametros"
+
+Video
+ [x] Deve lista todos os videos with data set "parametros"
+ [x] Deve criar um video with data set "parametros"
+ [x] Deve atualizar um video with data set "parametros"
+ [x] Deve mostrar um video with data set "parametros"
+ [x] Deve deletar um video with data set "parametros"
+ [x] Deve buscar videos para usuario nao autenticado with data set "parametros"
 

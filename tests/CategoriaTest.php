@@ -15,7 +15,7 @@ class CategoriaTest extends TestCase
     public function testDeveListarCategorias($parametros)
     {
         $categoria = Categoria::create($parametros);
-
+        $this->seeInDatabase('categorias', $parametros);
         $this->get($this->url);
         $this->seeStatusCode(200);
     } 
@@ -60,8 +60,8 @@ class CategoriaTest extends TestCase
     public function testDeveBuscarUmaUnicaCategoria($parametros)
     {
         $categoria = Categoria::create($parametros);
-
         $id = $categoria->id;
+        $this->seeInDatabase('categorias', $parametros);
 
         $this->get($this->url . $id);
         $this->seeJsonStructure([
@@ -79,12 +79,12 @@ class CategoriaTest extends TestCase
     public function testDeveDeletarCategoria($parametros)
     {
         $categoria = Categoria::create($parametros);
-
         $id = $categoria->id;
+        $this->seeInDatabase('categorias', $parametros);
 
-       $this->delete($this->url . $id);
-       $this->seeJsonStructure([]);
-       $this->seeStatusCode(410);
+        $this->delete($this->url . $id);
+        $this->seeJsonStructure(['sucesso']);
+        $this->seeStatusCode(410);
     }
 
     /**

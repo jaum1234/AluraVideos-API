@@ -45,7 +45,7 @@ Class CategoriaController extends Controller
         try {
             $recurso = $this->categoriaService->criarCategoria($request);
         } catch (QueryException $e) {
-            return response()->json("Os campo nao foram preenchidos corretamente", 404);
+            return response()->json(['erro' => 'Os campo nao foram preenchidos corretamente'], 400);
         }
 
         return response()->json($recurso, 201);
@@ -56,7 +56,7 @@ Class CategoriaController extends Controller
         try {
             $categoria = $this->categoriaService->buscarCategoria($id);
         } catch (\DomainException $e) {
-            return response()->json($e->getMessage(), 404);
+            return response()->json(['erro' => $e->getMessage()], 404);
         }
 
         return response()->json($categoria, 200);
@@ -67,12 +67,12 @@ Class CategoriaController extends Controller
         try {
             $recurso = $this->categoriaService->excluirCategoria($id);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), 403);
+            return response()->json(['erro' => $e->getMessage()], 403);
         } catch (\DomainException $e) {
-            return response()->json($e->getMessage(), 404);
+            return response()->json(['erro' => $e->getMessage()], 404);
         }
         
-        return response()->json($recurso . ' excluido', 410);
+        return response()->json(['sucesso' => $recurso . ' excluido'], 410);
     }
 
     public function update(CategoriaFormRequest $request, int $id)
@@ -80,9 +80,9 @@ Class CategoriaController extends Controller
         try {
             $categoria = $this->categoriaService->atualizarCategoria($request ,$id);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), 403);
+            return response()->json(['erro' => $e->getMessage()], 403);
         } catch (\DomainException $e) {
-            return response()->json($e->getMessage(), 404);
+            return response()->json(['erro' => $e->getMessage()], 404);
         }
 
         return response()->json($categoria ,201);
@@ -93,7 +93,7 @@ Class CategoriaController extends Controller
         try {
             $videos = $this->categoriaService->buscarVideoPorCategoria($id);
         } catch (\DomainException $e) {
-            return response()->json($e->getMessage(), 404);
+            return response()->json(['erro' => $e->getMessage()], 404);
         }
         return response()->json($videos);
     }
