@@ -6,11 +6,11 @@ O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segu
 ## Tecnologias
 
 <ul>
-    PHP com Lumen
-    Banco de dados MySQL
-    Composer
-    PHPUnit
-    Postman
+    -PHP com Lumen
+    -Banco de dados MySQL
+    -Composer
+    -PHPUnit
+    -Postman
 </ul>
 
 ## Consumindo a API
