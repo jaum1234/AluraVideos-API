@@ -6,31 +6,30 @@ O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segu
 ## Tecnologias
 
 <ul>
-    <li>PHP com Lumen</li>
-    <li>Banco de dados MySQL</li>
-    <li>Composer</li>
-    <li>PHPUnit</li>
-    <li>Postman</li>
+    PHP com Lumen
+    Banco de dados MySQL
+    Composer
+    PHPUnit
+    Postman
 </ul>
 
 ## Consumindo a API
 
 ## Executando
 
-<ol>
-    <li>Clone o projeto</li>
-    <li>Rode o composer</li>
-    <li>Copie o arquivo .env.example para um arquivo .env</li>
-    <li>Configure o banco de dados</li>
-    <li>Para gerar uma key: </li>
-    
-    ```php
-    $router->get('/key', function() {
-        return \Illuminate\Support\Str::random(32);
-    });
-    ```   
-    <li>Rode php artisan migrate</li>
-    <li>Acesse seu localhost</li>
-</ol>
+
+    1.Clone o projeto
+    2.Rode o composer
+    3.Copie o arquivo .env.example para um arquivo .env
+    4.Configure o banco de dados
+    5.Para gerar uma key: 
+        ```php
+        $router->get('/key', function() {
+            return \Illuminate\Support\Str::random(32);
+        });
+        ```   
+    6.Rode php artisan migrate
+    7.Acesse seu localhost
+
 
  
