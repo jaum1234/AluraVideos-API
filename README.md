@@ -23,13 +23,13 @@ O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segu
     <li>Copie o arquivo .env.example para um arquivo .env</li>
     <li>Configure o banco de dados</li>
     <li>Para gerar uma key: </li>
-        <pre>
-            <code>
-                $router->get('/key', function() {
-                    return \Illuminate\Support\Str::random(32);
-                });
-            </code>
-        </pre>
+    <pre>
+        <code>
+            $router->get('/key', function() {
+                return \Illuminate\Support\Str::random(32);
+            });
+        </code>
+    </pre>
     <li>Rode php artisan migrate</li>
     <li>Acesse seu localhost</li>
 </ol>
