@@ -15,6 +15,15 @@ $router->get('/', function () {
 $router->get('/api/home', function () {
         return 'Seja bem vindo';
 });
+
+$router->get('api/login/form', function () {
+        return view('auth.form-login');
+});
+
+$router->get('api/register/form', function () {
+        return view('auth.form-register');
+});
+
 $router->post('/api/login', 'AuthController@login');
 $router->post('/api/register', 'AuthController@register');
 
