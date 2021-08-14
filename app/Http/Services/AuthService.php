@@ -25,7 +25,7 @@ class AuthService
     {
         $token = Auth::attempt($credenciais);
         if (!$token) {
-            throw new \Exception('Nao autorizado');
+            throw new \Exception('Dados incorretos');
         }
 
         return $token;

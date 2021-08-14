@@ -14,9 +14,9 @@ class VideoService
         return $videos;
     }
 
-    public function criarVideo($atributos)
+    public function criarVideo(VideoFormRequest $request)
     {
-        $video = Video::create($atributos);
+        $video = Video::create($request->all());
         return $video;
     }
 
@@ -61,5 +61,7 @@ class VideoService
         $videos = Video::query()->limit(5)->get();
         return $videos;
     }
+
+   
 
 }

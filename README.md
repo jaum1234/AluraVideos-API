@@ -17,7 +17,6 @@ O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segu
 
 ## Executando
 
-
 1. Clone o projeto
 2. Rode o composer
 3. Copie o arquivo .env.example para um arquivo .env

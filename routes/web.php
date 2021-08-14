@@ -20,9 +20,7 @@ $router->group(['prefix' => '/api/videos'], function () use ($router) {
                 $router->put('/{id}', 'VideoController@update');
                 $router->delete('/{id}', 'VideoController@delete');
         });
-    });
-
-
+});
 
 $router->group(['prefix' => '/api/categorias'], function () use ($router) {
         $router->group(['middleware' => 'auth'], function () use ($router){

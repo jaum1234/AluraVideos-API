@@ -3,18 +3,18 @@ Auth
  [x] Deve logar um usuario
 
 Categoria
- [x] Deve listar categorias with data set "parametros"
- [x] Deve criar categoria with data set "parametros"
- [x] Deve atualizar categoria with data set "parametros"
- [x] Deve buscar uma unica categoria with data set "parametros"
- [x] Deve deletar categoria with data set "parametros"
- [x] Deve buscar video por categoria with data set "parametros"
+ [ ] Deve listar categorias with data set "parametros"
+ [ ] Deve criar categoria with data set "parametros"
+ [ ] Deve atualizar categoria with data set "parametros"
+ [ ] Deve buscar uma unica categoria with data set "parametros"
+ [ ] Deve deletar categoria with data set "parametros"
+ [ ] Deve buscar video por categoria with data set "parametros"
 
 Video
- [x] Deve lista todos os videos with data set "parametros"
- [x] Deve criar um video with data set "parametros"
- [x] Deve atualizar um video with data set "parametros"
- [x] Deve mostrar um video with data set "parametros"
- [x] Deve deletar um video with data set "parametros"
+ [ ] Deve lista todos os videos with data set "parametros"
+ [ ] Deve criar um video with data set "parametros"
+ [ ] Deve atualizar um video with data set "parametros"
+ [ ] Deve mostrar um video with data set "parametros"
+ [ ] Deve deletar um video with data set "parametros"
  [x] Deve buscar videos para usuario nao autenticado with data set "parametros"
 

@@ -15,8 +15,8 @@ class CategoriaFormRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'titulo' => 'required',
-			'cor' => 'required'
+			'titulo' => 'required|sometimes',
+			'cor' => 'required|sometimes'
 		];
     }
 

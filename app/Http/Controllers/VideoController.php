@@ -37,7 +37,7 @@ Class VideoController extends Controller
 
     public function store(VideoFormRequest $request)
     {
-        $video = $this->videoService->criarVideo($request->all());
+        $video = $this->videoService->criarVideo($request);
         return response()->json($video, 201);
     }
 
@@ -60,7 +60,7 @@ Class VideoController extends Controller
             return response()->json($e->getMessage());
         }
 
-        return response()->json(['sucesso' => $video . ' foi excluido com sucesso.'], 410);
+        return response()->json(['sucesso' => "'" . $video . "'" . ' foi excluido com sucesso.'], 410);
     }
 
     public function update(VideoFormRequest $request, int $id)
@@ -68,7 +68,7 @@ Class VideoController extends Controller
         try {
             $video = $this->videoService->atualizarVideo($request, $id);
         } catch (QueryException $e) {
-            return response()->json(['erro' => 'Os campos nao foram preenchidos corretamente.']);
+            return response()->json(['erro' => 'Os campos nao foram preenchidos corretamente.'], 400);
         }
 
         return response()->json($video, 200);

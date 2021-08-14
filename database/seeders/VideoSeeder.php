@@ -16,8 +16,8 @@ class VideoSeeder extends Seeder
     public function run()
     {
         DB::table('videos')->insert([
-            'titulo' => Str::random(10),
-            'descricao' => Str::random(50),
+            'titulo' => 'titulo' . rand(0, 100),
+            'descricao' => 'descricao' . rand(0, 100),
             'url' => 'http://' . Str::random(10) . '.com',
             'categoria_id' => 1
         ]);
