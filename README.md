@@ -14,7 +14,7 @@ O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segu
 
 
 ## Consumindo a API
-
+Documentaçao: https://documenter.getpostman.com/view/16256795/Tzz7PyCf
 ## Executando
 
 1. Clone o projeto
