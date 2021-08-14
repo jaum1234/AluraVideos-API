@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+$router->get('/api/home', function () {
+        return 'Seja bem vindo';
+});
 $router->post('/api/login', 'AuthController@login');
 $router->post('/api/register', 'AuthController@register');
 
