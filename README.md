@@ -14,7 +14,7 @@ O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segu
 
 
 ## Consumindo a API
-API: https://salty-bastion-95038.herokuapp.com/api/home
+API: https://salty-bastion-95038.herokuapp.com/api/home <br>
 Documentaçao: https://documenter.getpostman.com/view/16256795/Tzz7PyCf
 ## Executando
 
