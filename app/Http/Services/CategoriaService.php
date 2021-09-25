@@ -2,68 +2,29 @@
 
 namespace App\Http\Services;
 
-use App\Http\Requests\CategoriaFormRequest;
 use App\Models\Categoria;
-use Exception;
 use Illuminate\Http\Request;
-
-use function PHPUnit\Framework\isNull;
-
 class CategoriaService 
 {
-    public function buscarTodosAsCategorias($categoriasPorPagina)
+    public function atualizar(Request $request, Categoria $categoria) 
     {
-        $categorias = Categoria::paginate($categoriasPorPagina);
-        return $categorias;
-    }
-
-    public function criarCategoria($request)
-    {
-        $categoria = Categoria::create($request->all());
-        return $categoria;
-    }
-
-    public function buscarCategoria($id)
-    {
-        $categoria = Categoria::find($id);
-
-        if (is_null($categoria)) {
-           throw new \DomainException("Essa categoria nao existe");
-        };
-
-        return $categoria;
-    }
-
-    public function atualizarCategoria(CategoriaFormRequest $request, int $categoriaId) 
-    {
-        if ($categoriaId == 1) {
+        if ($categoria->id == 1) {
             throw new \Exception('Essa categoria nao pode ser alterada.');
-        }
-
-        $categoria = Categoria::find($categoriaId);
-        
-        if (is_null($categoria)) {
-            throw new \DomainException('Recurso nao encontrado.');
         }
 
         $categoria->titulo = $request->titulo;
         $categoria->cor = $request->cor;
+
         $categoria->save();
 
         return $categoria;
     }
 
-    public function excluirCategoria($categoriaId)
+    public function excluir(Categoria $categoria)
     {
-        if ($categoriaId == 1) {
-            throw new \Exception('Essa categoria nao pode ser alterada.');
-        }
-        
-        $categoria = Categoria::find($categoriaId);
-        
-        if (is_null($categoria)) {
-            throw new \DomainException('Recurso nao foi encontrado.');
-        }
+        if ($categoria->id == 1) {
+            throw new \Exception('Essa categoria nao pode ser excluida.');
+        }       
         
         $videos = $categoria->videos;
 
@@ -80,11 +41,10 @@ class CategoriaService
     {
         $categoria = Categoria::find($id);
         if (is_null($categoria)) {
-            throw new \DomainException('Recurso nao foi encontrada.');
+            throw new \DomainException('Categoria nao foi encontrada.');
         }
 
         $videos = $categoria->videos;
-
         return $videos;
     }
 
