@@ -4,17 +4,13 @@
 O projeto consiste em uma API RESTFUL proposto pela Plataforma Alura em seu segundo Alura Challenge. O objeto é possibilitar que um usúario para adicionar, pesquisar e ver vídeos, além de criar categorias e adicionar vídeos a elas. 
 
 ## Tecnologias
-
-
-- PHP com Lumen
-- Banco de dados MySQL
+- Lumen
+- MySQL
 - Composer
 - PHPUnit
-- Postman
-
+- Postman 
 
 ## Consumindo a API
-API: https://salty-bastion-95038.herokuapp.com/api/home <br>
 Documentaçao: https://documenter.getpostman.com/view/16256795/Tzz7PyCf
 ## Executando
 
