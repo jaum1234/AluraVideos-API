@@ -5,39 +5,18 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
-
-use App\Http\Services\UserService;
 use App\Http\Controllers\Controller;
+use App\Http\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 
 
 class AuthController extends Controller
 {
-    private UserService $service;
+    private AuthService $authService;
 
-    public function __construct(UserService $userService)
+    public function __construct(AuthService $authService)
     {
-        $this->service = $userService;
-    }
-
-    public function register(Request $request)
-    {
-        $validador = $this->service->validar($request);
-
-        if ($validador->fails()) {
-            return response()->json($validador->errors());
-        }
-
-        try {
-           $user = $this->service->registrar($validador->validated());
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Preencha todos os campos.'], 400);
-        }
-        return response()->json([
-            'status' => 'cadastrado',
-            'conteudo' => $user,
-            'mensagem' => 'Usuário cadastrado com sucesso.'
-        ], 201);
+        $this->authService = $authService;
     }
 
     public function login(Request $request)

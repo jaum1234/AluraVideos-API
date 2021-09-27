@@ -8,10 +8,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-$router->get('/', function () {
-        return redirect('/api/home');
-});
-
 $router->get('/api/home', function () {
         return 'Seja bem vindo';
 });
