@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 
-class AuthController extends Controller
+class RegisterController extends Controller
 {
     private RegisterService $registerService;
 

@@ -11,7 +11,7 @@ use App\Http\Requests\RegistroFormRequest;
 
 class AuthService 
 {  
-    public function logar($credenciais)
+    public function logar(array $credenciais)
     {
         $token = Auth::attempt($credenciais);
         if (!$token) {

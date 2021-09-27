@@ -1,11 +1,8 @@
 <?php
 
-use App\Http\Controllers\VideoController;
 use App\Models\Categoria;
 use App\Models\User;
 use App\Models\Video;
-use GuzzleHttp\Promise\Create;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use Tymon\JWTAuth\Facades\JWTAuth;
 

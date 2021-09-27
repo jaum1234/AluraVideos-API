@@ -1,27 +1,13 @@
 <?php
 
-use App\Models\Video;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use PhpParser\Node\Stmt\Catch_;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 $router->get('/api/home', function () {
         return 'Seja bem vindo';
 });
 
-$router->get('api/login/form', function () {
-        return view('auth.form-login');
-});
-
-$router->get('api/register/form', function () {
-        return view('auth.form-register');
-});
-
 $router->post('/api/login', 'AuthController@login');
-$router->post('/api/register', 'AuthController@register');
+$router->post('/api/register', 'RegisterController@register');
 
 $router->group(['prefix' => '/api/videos'], function () use ($router) {
         $router->get('/free', 'VideoController@livre');

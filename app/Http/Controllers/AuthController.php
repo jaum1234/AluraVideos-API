@@ -21,14 +21,14 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validador = $this->service->validar($request);
+        $validador = $this->authService->validar($request);
 
         if ($validador->fails()) {
             return response()->json($validador->errors());
         }
         
         try {
-            $token = $this->service->logar($validador->validated());
+            $token = $this->authService->logar($validador->validated());
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 401);
         }
