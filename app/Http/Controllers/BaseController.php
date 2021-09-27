@@ -34,9 +34,13 @@ Class BaseController extends Controller
     {
         $recurso = $this->classe::find($id);
 
-        if (is_null($recurso)) {
-           throw new \Exception('Esse recurso nao existe');
-        };
+        try {
+            if (is_null($recurso)) {
+                throw new \Exception('Esse recurso nao existe');
+            };
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
 
         return response()->json([
             'status' => 'exibido',
@@ -76,8 +80,12 @@ Class BaseController extends Controller
 
         $recurso = $this->classe::find($id);
 
-        if (is_null($recurso)) {
-            throw new \Exception('Esse recurso nao existe');
+        try {
+            if (is_null($recurso)) {
+                throw new \Exception('Esse recurso nao existe');
+            };
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
         }
 
         $recursoAtualizado = $this->classeService->atualizar($dadosValidados, $recurso);
@@ -93,9 +101,13 @@ Class BaseController extends Controller
     {
         $recurso = $this->classe::find($id);
 
-        if (is_null($recurso)) {
-            throw new \Exception('Esse recurso nao existe');
-        };
+        try {
+            if (is_null($recurso)) {
+                throw new \Exception('Esse recurso nao existe');
+            };
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
 
         $nomeRecursoExcluido = $this->classeService->excluir($recurso);
 
@@ -106,4 +118,5 @@ Class BaseController extends Controller
         ]);
     }
     
+
 }
