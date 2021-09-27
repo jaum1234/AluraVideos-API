@@ -39,20 +39,36 @@ Class BaseController extends Controller
     
     public function store(Request $request)
     {
-        $recurso = $this->classe::create($request->all());
+        $validador = $this->classeService->validar($request);
 
-        return response()->json($recurso);
+        if ($validador->fails()) {
+            return response()->json($validador->errors());
+        }
+
+        $dadosValidados = $validador->validated();
+
+        $recurso = $this->classe::create($dadosValidados);
+
+        return response()->json($recurso, 201);
     }
     
     public function update(Request $request, int $id)
     {
+        $validador = $this->classeService->validar($request);
+
+        if ($validador->fails()) {
+            return response()->json($validador->errors());
+        }
+
+        $dadosValidados = $validador->validated();
+
         $recurso = $this->classe::find($id);
 
         if (is_null($recurso)) {
             throw new \Exception('Esse recurso nao existe');
         }
 
-        $recursoAtualizado = $this->classeService->atualizar($request, $recurso);
+        $recursoAtualizado = $this->classeService->atualizar($dadosValidados, $recurso);
 
         return response()->json($recursoAtualizado);
     }

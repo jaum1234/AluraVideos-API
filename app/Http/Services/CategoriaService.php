@@ -4,6 +4,8 @@ namespace App\Http\Services;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 class CategoriaService 
 {
     public function atualizar(Request $request, Categoria $categoria) 
@@ -48,4 +50,15 @@ class CategoriaService
         return $videos;
     }
 
+    public function validar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'titulo' => 'required',
+            'cor' => 'required'
+        ], [
+            'required' => 'O campo :attribute é obrigatório.'
+        ]);
+
+        return $validator;
+    }
 }

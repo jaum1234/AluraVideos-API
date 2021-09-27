@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Video;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Testing\DatabaseTransactions;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VideoTest extends TestCase
 {
@@ -32,7 +33,11 @@ class VideoTest extends TestCase
      */
     public function testDeveCriarUmVideo($parametrosVideo)
     {
-        $this->post($this->url, $parametrosVideo);
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+    
+
+        $this->post($this->url, $parametrosVideo, ['Authorization' => 'Bearer ' . $token]);
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
             'titulo',

@@ -22,6 +22,7 @@ Class CategoriaController extends BaseController
         } catch (\DomainException $e) {
             return response()->json(['erro' => $e->getMessage()], 404);
         }
+        
         return response()->json($videos);
     }
 }
