@@ -105,11 +105,11 @@ Class BaseController extends Controller
             if (is_null($recurso)) {
                 throw new \Exception('Esse recurso nao existe');
             };
+            $nomeRecursoExcluido = $this->classeService->excluir($recurso);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         }
 
-        $nomeRecursoExcluido = $this->classeService->excluir($recurso);
 
         return response()->json([
             'status' => 'excluido',

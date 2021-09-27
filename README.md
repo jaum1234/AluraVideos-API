@@ -24,8 +24,9 @@ $router->get('/key', function() {
     return \Illuminate\Support\Str::random(32);
 });
 ```   
-6. Rode php artisan migrate
-7. Acesse seu localhost
+6. Rode: php artisan migrate
+7. Rode: php artisan db:seed --class=CategoriaSeeder
+8. Acesse seu localhost
 
 
  
