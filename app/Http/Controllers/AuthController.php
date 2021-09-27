@@ -5,35 +5,51 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Services\AuthService;
 
+use App\Http\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\LoginFormRequest;
-use App\Http\Requests\RegistroFormRequest;
+
 
 class AuthController extends Controller
 {
-    private $authService;
+    private UserService $service;
 
-    public function __construct()
+    public function __construct(UserService $userService)
     {
-        $this->authService = new AuthService();
+        $this->service = $userService;
     }
 
-    public function register(RegistroFormRequest $request)
+    public function register(Request $request)
     {
-        $this->authService->registrar($request);
-        return response()->json('Cadastro realizado com sucesso.', 201);
-    }
+        $validador = $this->service->validar($request);
 
-    public function login(LoginFormRequest $request)
-    {
-        
-        $credenciais = request(['email', 'password']);
+        if ($validador->fails()) {
+            return response()->json($validador->errors());
+        }
+
         try {
-            $token = $this->authService->logar($credenciais);
+           $user = $this->service->registrar($validador->validated());
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Preencha todos os campos.'], 400);
+        }
+        return response()->json([
+            'status' => 'cadastrado',
+            'conteudo' => $user,
+            'mensagem' => 'Usuário cadastrado com sucesso.'
+        ], 201);
+    }
+
+    public function login(Request $request)
+    {
+        $validador = $this->service->validar($request);
+
+        if ($validador->fails()) {
+            return response()->json($validador->errors());
+        }
+        
+        try {
+            $token = $this->service->logar($validador->validated());
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 401);
         }
