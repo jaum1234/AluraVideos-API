@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use App\Models\Categoria;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class CategoriaTest extends TestCase
@@ -14,10 +16,30 @@ class CategoriaTest extends TestCase
     */
     public function testDeveListarCategorias($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $categoria = Categoria::create($parametros);
-        $this->seeInDatabase('categorias', $parametros);
-        $this->get($this->url);
-        $this->seeStatusCode(200);
+        
+        //Act
+        $response = $this->get($this->url, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
+        $response->seeStatusCode(200);
+        $response->seeJsonStructure([
+            'conteudo' => [
+                'data' => [
+                    '*' => [
+                    'id',
+                    'titulo',
+                    'cor',
+                    'created_at',
+                    'updated_at'
+                    ]
+                ]
+            ]
+        ]);
     } 
 
     /**
@@ -25,13 +47,25 @@ class CategoriaTest extends TestCase
      */
     public function testDeveCriarCategoria($parametros)
     {
-        $this->post($this->url, $parametros);
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
+        //Act
+        $this->post($this->url, $parametros, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
-            'titulo',
-            'cor',
-            'created_at',
-            'updated_at',
+            'status',
+            'conteudo' => [
+                'id',
+                'titulo',
+                'cor',
+                'created_at',
+                'updated_at',
+            ],
+            'mensagem'
         ]);
         $this->seeInDatabase('categorias', $parametros);
 
@@ -42,10 +76,17 @@ class CategoriaTest extends TestCase
      */
     public function testDeveAtualizarCategoria($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $categoria = Categoria::create($parametros);
         $id = $categoria->id;
 
-        $this->put($this->url . $id, $parametros);
+        //Act
+        $this->put($this->url . $id, $parametros, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
             'titulo',
@@ -59,11 +100,18 @@ class CategoriaTest extends TestCase
     */
     public function testDeveBuscarUmaUnicaCategoria($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $categoria = Categoria::create($parametros);
         $id = $categoria->id;
         $this->seeInDatabase('categorias', $parametros);
 
-        $this->get($this->url . $id);
+        //Act
+        $this->get($this->url . $id, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
         $this->seeJsonStructure([
             'titulo',
             'cor',
@@ -78,13 +126,23 @@ class CategoriaTest extends TestCase
      */
     public function testDeveDeletarCategoria($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $categoria = Categoria::create($parametros);
         $id = $categoria->id;
-        $this->seeInDatabase('categorias', $parametros);
+        
+        //Act
+        $this->delete($this->url . $id, [], ['Authorization' => 'Bearer ' . $token]);
 
-        $this->delete($this->url . $id);
-        $this->seeJsonStructure(['sucesso']);
-        $this->seeStatusCode(410);
+        //Assert
+        $this->seeJsonStructure([
+            'status',
+            'conteudo',
+            'mensagem'
+        ]);
+        $this->seeStatusCode(200);
     }
 
     /**
@@ -92,6 +150,11 @@ class CategoriaTest extends TestCase
      */
     public function testDeveBuscarVideoPorCategoria($parametros)
     { 
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
+        //Act
         $categoria = Categoria::create($parametros);
         $id = $categoria->id;
         $categoria->videos()->create([
@@ -100,6 +163,7 @@ class CategoriaTest extends TestCase
             'url' => 'url',
         ]);
         
+        //Assert
         $this->get($this->url . $id . '/videos');
         $this->seeStatusCode(200);
     }

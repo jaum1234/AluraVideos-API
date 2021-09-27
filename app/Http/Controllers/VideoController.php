@@ -16,6 +16,10 @@ Class VideoController extends BaseController
     public function livre()
     {
         $videos = Video::query()->limit(5)->get();;
-        return response()->json($videos);
+        return response()->json([
+            'status' => 'listado',
+            'conteudo' => $videos,
+            'mensagem' => 'Videos para usuários nao autenticados foram exibidos.'
+        ]);
     }
 }

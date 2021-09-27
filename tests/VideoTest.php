@@ -18,13 +18,35 @@ class VideoTest extends TestCase
      */
     public function testDeveListaTodosOsVideos($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
 
-        $video1 = Video::create($parametros);
-        $video2 = Video::create($parametros);
-        $video3 = Video::create($parametros);
-        $this->seeInDatabase('videos', $parametros);
-        $this->get($this->url);
-        $this->seeStatusCode(200);   
+        for ($i = 0; $i < 3; $i++) {
+            Video::create($parametros);
+        }
+
+        //Act
+        $response = $this->get($this->url, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
+        $response->seeStatusCode(200);  
+        $response->seeJsonStructure([
+            'status',
+            'conteudo' => [
+                'data' => [
+                    '*' => [
+                        'titulo',
+                        'descricao',
+                        'url',
+                        'created_at',
+                        'updated_at',
+                        'categoria_id'
+                    ]
+                ]
+            ],
+            'mensagem'
+        ]); 
     }
 
     /**
@@ -33,19 +55,26 @@ class VideoTest extends TestCase
      */
     public function testDeveCriarUmVideo($parametrosVideo)
     {
+        //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
     
-
+        //Act
         $this->post($this->url, $parametrosVideo, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
         $this->seeStatusCode(201);
         $this->seeJsonStructure([
-            'titulo',
-            'descricao',
-            'url',
-            'created_at',
-            'updated_at',
-            'categoria_id'
+            'status',
+            'conteudo' => [
+                'titulo',
+                'descricao',
+                'url',
+                'created_at',
+                'updated_at',
+                'categoria_id'
+            ],
+            'mensagem'
         ]);
         $this->seeInDatabase('videos', $parametrosVideo);
     }
@@ -55,18 +84,29 @@ class VideoTest extends TestCase
      */
     public function testDeveAtualizarUmVideo($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $video = Video::create($parametros);
         $id = $video->id;
         
-        $this->put($this->url . $id, $parametros);
+        //Act
+        $this->put($this->url . $id, $parametros, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
         $this->seeStatusCode(200);
         $this->seeJsonStructure([
-            'titulo',
-            'descricao',
-            'url',
-            'created_at',
-            'updated_at',
-            'categoria_id'
+            'status',
+            'conteudo' => [
+                'titulo',
+                'descricao',
+                'url',
+                'created_at',
+                'updated_at',
+                'categoria_id'
+            ],
+            'mensagem'
         ]);
         $this->seeInDatabase('videos', $parametros);
     }
@@ -76,18 +116,30 @@ class VideoTest extends TestCase
     */
     public function testDeveMostrarUmVideo($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $video = Video::create($parametros);
         $id = $video->id;
-        $this->seeInDatabase('videos', $parametros);
 
-        $this->get($this->url . $id);
-        $this->seeJsonStructure([
-            'titulo',
-            'descricao',
-            'url',
-            'categoria_id'
+        //Act
+        $response = $this->get($this->url . $id, ['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
+        $response->seeJsonStructure([
+            'status',
+            'conteudo' => [
+                'id',
+                'titulo',
+                'descricao',
+                'url',
+                'categoria_id'
+            ],
+            'mensagem'
         ]);
-        $this->seeStatusCode(200);
+        $response->seeStatusCode(200);
+    
     }
 //
 
@@ -96,13 +148,19 @@ class VideoTest extends TestCase
      */
     public function testDeveDeletarUmVideo($parametros)
     {
+        //Arrange
+        $user = User::factory()->create();
+        $token = JWTAuth::fromUser($user);
+
         $video = Video::create($parametros);
         $id = $video->id;
-        $this->seeInDatabase('videos', $parametros);
 
-        $this->delete($this->url . $id);
-        $this->seeJsonStructure(['sucesso']);
-        $this->seeStatusCode(410);
+        //Act
+        $this->delete($this->url . $id, [],['Authorization' => 'Bearer ' . $token]);
+
+        //Assert
+        $this->seeStatusCode(200);
+        $this->notSeeInDatabase('videos', $parametros);
     }
 
     /**
@@ -110,24 +168,29 @@ class VideoTest extends TestCase
      */
     public function testDeveBuscarVideosParaUsuarioNaoAutenticado($parametros)
     {
-        $video1 = Video::create($parametros);
-        $video2 = Video::create($parametros);
-        $video3 = Video::create($parametros);
-        $video4 = Video::create($parametros);
-        $video5 = Video::create($parametros);
-        $this->seeInDatabase('videos', $parametros);
+        //Arrange
+        for ($i = 0; $i < 5; $i++) {
+            Video::create($parametros);
+        }
+       
+        //Act
+        $response = $this->get($this->url . 'free');
 
-        $this->get($this->url . 'free');
-        $this->seeStatusCode(200);
-        $this->seeJsonStructure([
-            '*' => [
-                'titulo',
-                'descricao',
-                'url',
-                'created_at',
-                'updated_at',
-                'categoria_id',
+        //Assert
+        $response->seeStatusCode(200);
+        $response->seeJsonStructure([
+            'status',
+            'conteudo' => [
+                '*' => [
+                    'titulo',
+                    'descricao',
+                    'url',
+                    'created_at',
+                    'updated_at',
+                    'categoria_id',
+                ],
             ],
+            'status'
         ]);
     }
 
