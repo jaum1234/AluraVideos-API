@@ -28,6 +28,6 @@ Class CategoriaController extends BaseController
             'status' => 'listado',
             'conteudo' => $videos,
             'mensagem' => 'Todos os videos da categoria de id ' . $id . ' foram listados.'
-        ]);
+        ], 200);
     }
 }

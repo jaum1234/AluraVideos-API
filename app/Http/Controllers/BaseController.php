@@ -27,7 +27,7 @@ Class BaseController extends Controller
             'status' => 'listado',
             'conteudo' => $recursos,
             'mensagem' => 'Todos os itens foram listados.'
-        ]);
+        ], 200);
     }
 
     public function show(int $id)
@@ -39,14 +39,14 @@ Class BaseController extends Controller
                 throw new \Exception('Esse recurso nao existe');
             };
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 404);
         }
 
         return response()->json([
             'status' => 'exibido',
             'conteudo' => $recurso,
             'mensagem' => 'O recurso foi exibido'
-        ]);
+        ], 200);
     }
     
     public function store(Request $request)
@@ -85,7 +85,7 @@ Class BaseController extends Controller
                 throw new \Exception('Esse recurso nao existe');
             };
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 404);
         }
 
         $recursoAtualizado = $this->classeService->atualizar($dadosValidados, $recurso);
@@ -94,7 +94,7 @@ Class BaseController extends Controller
             'status' => 'atualizado',
             'conteudo' => $recursoAtualizado,
             'mensagem' => 'O recurso foi atualizado.'
-        ]);
+        ], 200);
     }
 
     public function delete(int $id)
@@ -106,7 +106,7 @@ Class BaseController extends Controller
                 throw new \Exception('Esse recurso nao existe');
             };
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 404);
         }
 
         $nomeRecursoExcluido = $this->classeService->excluir($recurso);
@@ -115,7 +115,7 @@ Class BaseController extends Controller
             'status' => 'excluido',
             'conteudo' => '',
             'mensagem' => $nomeRecursoExcluido . ' foi excluido' 
-        ]);
+        ], 200);
     }
     
 
