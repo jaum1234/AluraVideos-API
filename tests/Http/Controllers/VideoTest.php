@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\VideoController;
+use App\Models\Categoria;
 use App\Models\User;
 use App\Models\Video;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -11,19 +13,24 @@ class VideoTest extends TestCase
 {
     use DatabaseTransactions;
     
-    private $url = 'api/videos/';
+    private $url = '/api/videos/';
     
-    /**
-     * @dataProvider criarParametros
-     */
-    public function testDeveListaTodosOsVideos($parametros)
+    public function testDeveListaTodosOsVideos()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
+        
+        $cateogoria = Categoria::factory()->create();
+        $categoriaId = $cateogoria->id;
 
         for ($i = 0; $i < 3; $i++) {
-            Video::create($parametros);
+            Video::factory()->create([
+                'titulo' => 'titulo do video',
+                'descricao' => 'descricao do video',
+                'url' => 'url do video',
+                'categoria_id' => $categoriaId
+            ]);
         }
 
         //Act
@@ -49,18 +56,24 @@ class VideoTest extends TestCase
         ]); 
     }
 
-    /**
-     * @dataProvider criarParametros
-     *
-     */
-    public function testDeveCriarUmVideo($parametrosVideo)
+    public function testDeveCriarUmVideo()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
+
+        $cateogoria = Categoria::factory()->create();
+        $categoriaId = $cateogoria->id;
+
+        $parametros = [
+            'titulo' => 'titulo do video',
+            'descricao' => 'descricao do video',
+            'url' => 'url do video',
+            'categoria_id' => $categoriaId
+        ];
     
         //Act
-        $this->post($this->url, $parametrosVideo, ['Authorization' => 'Bearer ' . $token]);
+        $this->post($this->url, $parametros, ['Authorization' => 'Bearer ' . $token]);
 
         //Assert
         $this->seeStatusCode(201);
@@ -76,23 +89,38 @@ class VideoTest extends TestCase
             ],
             'mensagem'
         ]);
-        $this->seeInDatabase('videos', $parametrosVideo);
+        $this->seeInDatabase('videos', $parametros);
     }
 
-    /**
-     * @dataProvider criarParametros
-     */
-    public function testDeveAtualizarUmVideo($parametros)
+    public function testDeveAtualizarUmVideo()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $video = Video::create($parametros);
+        $cateogoria = Categoria::factory()->create();
+        $categoriaId = $cateogoria->id;
+
+        $parametros = [
+            'titulo' => 'titulo do video',
+            'descricao' => 'descricao do video',
+            'url' => 'url do video',
+            'categoria_id' => $categoriaId
+        ];
+
+        $video = Video::factory()->create($parametros);
+
         $id = $video->id;
+
+        $novosDados = [
+            'titulo' => 'novo titulo',
+            'descricao' => 'nova descricao',
+            'url' => 'nova url',
+            'categoria_id' => $categoriaId
+        ];
         
         //Act
-        $this->put($this->url . $id, $parametros, ['Authorization' => 'Bearer ' . $token]);
+        $this->put($this->url . $id, $novosDados, ['Authorization' => 'Bearer ' . $token]);
 
         //Assert
         $this->seeStatusCode(200);
@@ -108,19 +136,25 @@ class VideoTest extends TestCase
             ],
             'mensagem'
         ]);
-        $this->seeInDatabase('videos', $parametros);
+        $this->seeInDatabase('videos', $novosDados);
+        $this->notSeeInDatabase('videos', $parametros);
     }
 
-   /**
-    *  @dataProvider criarParametros
-    */
-    public function testDeveMostrarUmVideo($parametros)
+    public function testDeveMostrarUmVideo()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $video = Video::create($parametros);
+        $cateogoria = Categoria::factory()->create();
+        $categoriaId = $cateogoria->id;
+
+        $video = Video::factory()->create([
+            'titulo' => 'titulo do video',
+            'descricao' => 'descricao do video',
+            'url' => 'url do video',
+            'categoria_id' => $categoriaId
+        ]);
         $id = $video->id;
 
         //Act
@@ -141,18 +175,25 @@ class VideoTest extends TestCase
         $response->seeStatusCode(200);
     
     }
-//
-
-    /**
-     *  @dataProvider criarParametros
-     */
-    public function testDeveDeletarUmVideo($parametros)
+    
+    public function testDeveDeletarUmVideo()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $video = Video::create($parametros);
+        $cateogoria = Categoria::factory()->create();
+        $categoriaId = $cateogoria->id;
+
+        $parametros = [
+            'titulo' => 'titulo do video',
+            'descricao' => 'descricao do video',
+            'url' => 'url do video',
+            'categoria_id' => $categoriaId
+        ];
+
+        $video = Video::factory()->create($parametros);
+
         $id = $video->id;
 
         //Act
@@ -161,16 +202,26 @@ class VideoTest extends TestCase
         //Assert
         $this->seeStatusCode(200);
         $this->notSeeInDatabase('videos', $parametros);
+        $this->seeJsonStructure([
+            'status',
+            'conteudo',
+            'mensagem'
+        ]);
     }
-
-    /**
-     *  @dataProvider criarParametros
-     */
-    public function testDeveBuscarVideosParaUsuarioNaoAutenticado($parametros)
+ 
+    public function testDeveBuscarVideosParaUsuarioNaoAutenticado()
     {
         //Arrange
+        $cateogoria = Categoria::factory()->create();
+        $categoriaId = $cateogoria->id;
+
         for ($i = 0; $i < 5; $i++) {
-            Video::create($parametros);
+            Video::factory()->create([
+                'titulo' => 'titulo do video',
+                'descricao' => 'descricao do video',
+                'url' => 'url do video',
+                'categoria_id' => $categoriaId
+            ]);
         }
        
         //Act
@@ -192,24 +243,5 @@ class VideoTest extends TestCase
             ],
             'status'
         ]);
-    }
-
-
-    public function criarParametros()
-    {
-        $parametros = [
-            'titulo' => 'titulo',
-            'descricao' => 'descricao',
-            'url' => 'http://url.com',
-            'categoria_id' => 1
-        ];
-
-
-        return [
-            'parametros' => [$parametros]
-        ];
-    }
-
-    
-    
+    } 
 }

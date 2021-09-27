@@ -3,19 +3,20 @@
 namespace App\Http\Services;
 
 use App\Models\Categoria;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CategoriaService 
 {
-    public function atualizar(Request $request, Categoria $categoria) 
+    public function atualizar(array $dados, Categoria $categoria) 
     {
         if ($categoria->id == 1) {
             throw new \Exception('Essa categoria nao pode ser alterada.');
         }
 
-        $categoria->titulo = $request->titulo;
-        $categoria->cor = $request->cor;
+        $categoria->titulo = $dados['titulo'];
+        $categoria->cor = $dados['cor'];
 
         $categoria->save();
 
@@ -46,7 +47,7 @@ class CategoriaService
             throw new \DomainException('Categoria nao foi encontrada.');
         }
 
-        $videos = $categoria->videos;
+        $videos = Video::where('categoria_id', $id)->paginate(4);
         return $videos;
     }
 

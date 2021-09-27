@@ -11,16 +11,16 @@ class CategoriaTest extends TestCase
     
     private $url = '/api/categorias/';
 
-    /**
-    * @dataProvider criarParametros
-    */
-    public function testDeveListarCategorias($parametros)
+
+    public function testDeveListarCategorias()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $categoria = Categoria::create($parametros);
+        for ($i = 0; $i < 10; $i++) {
+            Categoria::factory()->create();
+        }
         
         //Act
         $response = $this->get($this->url, ['Authorization' => 'Bearer ' . $token]);
@@ -28,6 +28,7 @@ class CategoriaTest extends TestCase
         //Assert
         $response->seeStatusCode(200);
         $response->seeJsonStructure([
+            'status',
             'conteudo' => [
                 'data' => [
                     '*' => [
@@ -38,18 +39,21 @@ class CategoriaTest extends TestCase
                     'updated_at'
                     ]
                 ]
-            ]
+            ],
+            'mensagem'
         ]);
     } 
 
-    /**
-     * @dataProvider criarParametros
-     */
-    public function testDeveCriarCategoria($parametros)
+    public function testDeveCriarCategoria()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
+
+        $parametros = [
+            'titulo' => 'titulo da categoria',
+            'cor' => 'cor da categoria'
+        ];
 
         //Act
         $this->post($this->url, $parametros, ['Authorization' => 'Bearer ' . $token]);
@@ -71,66 +75,82 @@ class CategoriaTest extends TestCase
 
     }
     
-    /**
-     * @dataProvider criarParametros
-     */
-    public function testDeveAtualizarCategoria($parametros)
+    public function testDeveAtualizarCategoria()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $categoria = Categoria::create($parametros);
+        $parametros = [
+            'titulo' => 'titulo da categoria',
+            'cor' => 'cor da categoria'
+        ];
+
+        $categoria = Categoria::factory()->create($parametros);
         $id = $categoria->id;
+
+        $novosDados = [
+            'titulo' => 'novo titulo',
+            'cor' => 'nova cor'
+        ];
 
         //Act
-        $this->put($this->url . $id, $parametros, ['Authorization' => 'Bearer ' . $token]);
+        $this->put($this->url . $id, $novosDados, ['Authorization' => 'Bearer ' . $token]);
 
         //Assert
-        $this->seeStatusCode(201);
+        $this->seeStatusCode(200);
         $this->seeJsonStructure([
-            'titulo',
-            'cor',
+            'status',
+            'conteudo' => [
+                'id',
+                'titulo',
+                'cor',
+            ],
+            'mensagem'
         ]);
-        $this->seeInDatabase('categorias', $parametros);
+        $this->seeInDatabase('categorias', $novosDados);
+        $this->notSeeInDatabase('categorias', $parametros);
     }
 //
-    /**
-    * @dataProvider criarParametros
-    */
-    public function testDeveBuscarUmaUnicaCategoria($parametros)
+    public function testDeveBuscarUmaUnicaCategoria()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $categoria = Categoria::create($parametros);
+        $categoria = Categoria::factory()->create();
         $id = $categoria->id;
-        $this->seeInDatabase('categorias', $parametros);
 
         //Act
         $this->get($this->url . $id, ['Authorization' => 'Bearer ' . $token]);
 
         //Assert
         $this->seeJsonStructure([
-            'titulo',
-            'cor',
-            'created_at',
-            'updated_at',
+            'status',
+            'conteudo' => [
+                'titulo',
+                'cor',
+                'created_at',
+                'updated_at',
+            ],
+            'mensagem'
         ]);
         $this->seeStatusCode(200);
     }
 //
-    /**
-     * @dataProvider criarParametros
-     */
-    public function testDeveDeletarCategoria($parametros)
+    
+    public function testDeveDeletarCategoria()
     {
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        $categoria = Categoria::create($parametros);
+        $parametros = [
+            'titulo' => 'titulo do categoria',
+            'cor' => 'cor da categoria'
+        ];
+
+        $categoria = Categoria::factory()->create($parametros);
         $id = $categoria->id;
         
         //Act
@@ -143,19 +163,17 @@ class CategoriaTest extends TestCase
             'mensagem'
         ]);
         $this->seeStatusCode(200);
+        $this->notSeeInDatabase('categorias', $parametros);
     }
 
-    /**
-     * @dataProvider criarParametros
-     */
-    public function testDeveBuscarVideoPorCategoria($parametros)
+    
+    public function testDeveBuscarVideoPorCategoria()
     { 
         //Arrange
         $user = User::factory()->create();
         $token = JWTAuth::fromUser($user);
 
-        //Act
-        $categoria = Categoria::create($parametros);
+        $categoria = Categoria::factory()->create();
         $id = $categoria->id;
         $categoria->videos()->create([
             'titulo' => 'titulo',
@@ -163,30 +181,25 @@ class CategoriaTest extends TestCase
             'url' => 'url',
         ]);
         
+        //Act
+        $response = $this->get($this->url . $id . '/videos', ['Authorization' => 'Bearer ' . $token]);
+
         //Assert
-        $this->get($this->url . $id . '/videos');
         $this->seeStatusCode(200);
+        $this->seeJsonStructure([
+            'status',
+            'conteudo' => [
+                'data' => [
+                '*' => [
+                    'id',
+                    'titulo',
+                    'created_at',
+                    'updated_at',
+                    'categoria_id'
+                    ]
+                ]
+            ],
+            'mensagem'
+        ]);
     }
-
-    public function criarParametros()
-    {
-        $parametros = [
-            'titulo' => 'titulo',
-            'cor' => 'color'
-        ];
-
-        return [
-            'parametros' => [$parametros]
-        ];
-    }
-
-    //public function criarParametrosVideos()
-    //{
-    //    $parametros = [
-    //        'titulo' => 'titulo',
-    //        'descricao' => 'descricao',
-    //        'url' => 'url',
-    //        'categoria_id' => 1
-    //    ];
-    //}
 }

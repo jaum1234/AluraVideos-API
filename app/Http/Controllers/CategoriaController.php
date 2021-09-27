@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use App\Http\Controllers\BaseController;
 use App\Http\Services\CategoriaService;
+use App\Models\Video;
 
 Class CategoriaController extends BaseController
 {
@@ -23,6 +24,10 @@ Class CategoriaController extends BaseController
             return response()->json(['erro' => $e->getMessage()], 404);
         }
         
-        return response()->json($videos);
+        return response()->json([
+            'status' => 'listado',
+            'conteudo' => $videos,
+            'mensagem' => 'Todos os videos da categoria de id ' . $id . ' foram listados.'
+        ]);
     }
 }

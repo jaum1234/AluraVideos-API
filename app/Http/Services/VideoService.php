@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Validator;
 
 class VideoService 
 {
-    public function atualizar(Request $request, Video $video) 
+    public function atualizar(array $dados, Video $video) 
     {
-        $video->titulo = $request->titulo;
-        $video->descricao = $request->descricao;
-        $video->url = $request->url;
-        $video->categoria_id = $request->categoria_id;
+        $video->titulo = $dados['titulo'];
+        $video->descricao = $dados['descricao'];
+        $video->url = $dados['url'];
+        $video->categoria_id = $dados['categoria_id'];
 
         $video->save();
 

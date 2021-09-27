@@ -22,10 +22,10 @@ class VideoFactory extends Factory
     public function definition()
     {
         return [
-            'titulo' => $this->faker->name,
-            'descricao' => $this->faker->unique()->safeEmail,
-            'url' => "",
-            'categoria_id' => ""
+            'titulo' => $this->faker->name(),
+            'descricao' => $this->faker->unique()->safeEmail(),
+            'url' => "url",
+            'categoria_id' => 1
         ];
     }
 }
