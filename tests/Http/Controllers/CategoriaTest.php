@@ -98,7 +98,6 @@ class CategoriaTest extends TestCase
         $this->put($this->url . $id, $novosDados, ['Authorization' => 'Bearer ' . $token]);
 
         //Assert
-        $this->seeStatusCode(200);
         $this->seeJsonStructure([
             'status',
             'conteudo' => [
@@ -110,6 +109,7 @@ class CategoriaTest extends TestCase
         ]);
         $this->seeInDatabase('categorias', $novosDados);
         $this->notSeeInDatabase('categorias', $parametros);
+        $this->seeStatusCode(200);
     }
 //
     public function testDeveBuscarUmaUnicaCategoria()

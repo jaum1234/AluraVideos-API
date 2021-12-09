@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Http\Services\VideoService;
+use App\Http\Services\Validadores\VideoValidador;
+
 Class VideoController extends BaseController
 {
 
-    public function __construct(VideoService $videoService)
+    public function __construct(VideoService $videoService, VideoValidador $videoValidador)
     {
         $this->classeService = $videoService;
+        $this->validador = $videoValidador;
         $this->classe = Video::class;
     }
 

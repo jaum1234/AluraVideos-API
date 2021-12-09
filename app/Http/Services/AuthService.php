@@ -21,17 +21,6 @@ class AuthService
         return $token;
     }
 
-    public function validar(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required',
-        ], [
-            'required' => 'O campo :attribute é obrigatório.',
-            'unique' => 'O email ja esta sendo utilizado.'
-        ]);
-
-        return $validator;
-    }
+    
 
 }

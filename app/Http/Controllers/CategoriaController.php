@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categoria;
-use App\Http\Controllers\BaseController;
-use App\Http\Services\CategoriaService;
 use App\Models\Video;
+use App\Models\Categoria;
+use App\Http\Services\CategoriaService;
+use App\Http\Controllers\BaseController;
+use App\Http\Services\Validadores\CategoriaValidador;
 
 Class CategoriaController extends BaseController
 {
     
-    public function __construct(CategoriaService $categoriaService)
+    public function __construct(CategoriaService $categoriaService, CategoriaValidador $categoriaValidador)
     {
         $this->classeService = $categoriaService;
+        $this->validador = $categoriaValidador;
         $this->classe = Categoria::class;
     }
     

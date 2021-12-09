@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\BuscadorQuery;
 use Illuminate\Http\Request;
+use App\Http\Services\BuscadorQuery;
+use Illuminate\Support\Facades\Auth;
 
 Class BaseController extends Controller
 {
@@ -11,6 +12,7 @@ Class BaseController extends Controller
 
     protected string $classe;
     protected $classeService;
+    protected $validador;
 
     public function index(Request $request)
     {
@@ -51,12 +53,12 @@ Class BaseController extends Controller
     
     public function store(Request $request)
     {
-        $validador = $this->classeService->validar($request);
+        $validador = $this->validador->validar($request);
 
         if ($validador->fails()) {
             return response()->json($validador->errors());
         }
-
+        
         $dadosValidados = $validador->validated();
 
         $recurso = $this->classe::create($dadosValidados);
@@ -70,7 +72,7 @@ Class BaseController extends Controller
     
     public function update(Request $request, int $id)
     {
-        $validador = $this->classeService->validar($request);
+        $validador = $this->validador->validar($request);
 
         if ($validador->fails()) {
             return response()->json($validador->errors());

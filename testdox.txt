@@ -1,22 +1,3 @@
-Auth
- [x] Deve logar um usuario
-
-Categoria
- [x] Deve listar categorias
- [x] Deve criar categoria
- [x] Deve atualizar categoria
- [x] Deve buscar uma unica categoria
- [x] Deve deletar categoria
- [x] Deve buscar video por categoria
-
 Register
  [x] Deve registrar um usuario
-
-Video
- [x] Deve lista todos os videos
- [x] Deve criar um video
- [x] Deve atualizar um video
- [x] Deve mostrar um video
- [x] Deve deletar um video
- [x] Deve buscar videos para usuario nao autenticado
 

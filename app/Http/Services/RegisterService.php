@@ -23,18 +23,6 @@ class RegisterService
         return $user;
     }
 
-    public function validar(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|unique:users,email',
-            'password' => 'required',
-        ], [
-            'required' => 'O campo :attribute é obrigatório.',
-            'unique' => 'O email ja esta sendo utilizado.'
-        ]);
-
-        return $validator;
-    }
+    
 
 }
